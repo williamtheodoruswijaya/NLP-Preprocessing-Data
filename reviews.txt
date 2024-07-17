@@ -1,0 +1,10 @@
+negative#this tv is good enough to be use but are used .
+negative#this tv is good enough .
+negative#this watch is good enough
+positive#this watch is really good .
+positive#this watch is better to be great .
+positive#this tv is great
+positive#this tv is used .
+positive#this tv is scam , it 's not worth to be bought .
+negative#this tv is scam , it 's not worth to be bought .
+positive#this tv even thou it 's expensive , it 's really have a beautiful pictures .

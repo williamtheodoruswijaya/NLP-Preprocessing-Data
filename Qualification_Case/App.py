@@ -1,16 +1,15 @@
 import os
+import pickle
+import nltk
+from nltk.probability import FreqDist
+from nltk.tokenize import word_tokenize, sent_tokenize
 
 # getchar() -> a = input('').split(" ")[0]
 
 def write_file(review: str, review_category: str):
-    if review_category == "pos":
-        file = open("positive.txt", "a")
-        file.write(review + "\n")
-        file.close()
-    elif review_category == "neg":
-        file = open("negative.txt", "a")
-        file.write(review + "\n")
-        file.close()
+    file = open("reviews.txt", "a")
+    file.write(review_category + "#" + " ".join(review) + "\n")
+    file.close()
 
 def add_review():
     select = 0
@@ -19,23 +18,31 @@ def add_review():
     while True:
         os.system("cls")
         print("ADD REVIEW")
-        print("1. ADD POSITIVE REVIEW")
-        print("2. ADD NEGATIVE REVIEW")
-        print("3. BACK")
+        print("1. ADD REVIEW")
+        print("2. BACK")
         select = int(input(">> "))
         if select == 1:
             review = input("ENTER REVIEW: ")
-            review_category = "pos"
+            review = review.lower()
+            review = word_tokenize(review)
+            try:
+                file = open("classifier.pickle", "rb")
+                classifier = pickle.load(file)
+                review_category = classifier.classify(FreqDist(review))
+                print("REVIEW CATEGORY: " + review_category)
+                file.close()
+            except FileNotFoundError:
+                print("ERROR: CLASSIFIER NOT FOUND.")
+                print("PLEASE TRAIN THE CLASSIFIER FIRST.")
+                a = input('').split(" ")[0]
+            except Exception as e:
+                print("ERROR: " + e)
+                a = input('').split(" ")[0]
+                return
             write_file(review, review_category)
             print("REVIEW ADDED SUCCESSFULLY.")
             a = input('').split(" ")[0]
         elif select == 2:
-            review = input("ENTER REVIEW: ")
-            review_category = "neg"
-            write_file(review, review_category)
-            print("REVIEW ADDED SUCCESSFULLY.")
-            a = input('').split(" ")[0]
-        elif select == 3:
             break
         else:
             print("INVALID INPUT. PLEASE TRY AGAIN.")
@@ -45,10 +52,19 @@ def add_review():
 def main_menu():
     select = 0
     while True:
+        review = open("reviews.txt", "r").read()
+        review = sent_tokenize(review)
+        review_category = ""
+        review_text = ""
+        if len(review) > 0:
+            review_text = review[-1].split("#")[1]
+            review_category = review[-1].split("#")[0]
+        else:
+            review = ""
         os.system("cls")
         print("ELECTRONIC REVIEW SYSTEM")
-        print("YOUR REVIEW: ")
-        print("YOUR REVIEW CATEGORY (POSITIVE/NEGATIVE): ")
+        print(f"YOUR REVIEW: {review_text}")
+        print(f"YOUR REVIEW CATEGORY (POSITIVE/NEGATIVE): {review_category}")
         print("1. ADD REVIEW")
         print("2. VIEW MOVIE RECOMMENDATION")
         print("3. VIEW NAMED ENTITY RECOGNITION")
