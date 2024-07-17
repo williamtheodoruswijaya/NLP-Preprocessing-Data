@@ -1,2 +1,0 @@
-Ini file classifier.pickle di directory Qualification_Case sama di luarnya itu technically sama aja.
-Saya keluarin karena file App.py awalnya ga recognize si classifier.pickle waktu ada di dalam Qualification_Case
