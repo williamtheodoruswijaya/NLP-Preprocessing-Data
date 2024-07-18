@@ -10,6 +10,14 @@ def write_file(review: str, review_category: str):
     file = open("reviews.txt", "a")
     file.write(review_category + "#" + " ".join(review) + "\n")
     file.close()
+    if review_category == "positive":
+        file = open("positive.txt", "a")
+        file.write(f"{review}\n")
+        file.close()
+    else:
+        file = open("negative.txt", "a")
+        file.write(f"{review}\n")
+        file.close()
 
 def add_review():
     select = 0
@@ -84,4 +92,5 @@ def main_menu():
             print("INVALID INPUT. PLEASE TRY AGAIN.")
             continue
 
-main_menu()
+if __name__ == "__main__":
+    main_menu()
