@@ -84,6 +84,26 @@ def view_electronic_recommendation():
     print("\nPress any key to continue...")
     a = input('').split(" ")[0]
 
+def view_named_entity_recognition():
+    os.system("cls")
+
+    # Load the named entity recognition data from the pickle file
+    try:
+        with open('ner_data.pickle', 'rb') as file:
+            ner_data = pickle.load(file)
+        print("Data loaded successfully.")
+    except Exception as e:
+        print(f"Error loading pickle file: {e}")
+    
+    print("\nExtracted Named Entities:")
+    print("Persons: ", ner_data["persons"])
+    print("Organizations: ", ner_data["organizations"])
+    print("Locations: ", ner_data["locations"])
+    print("Electronic Devices: ", ner_data["electronic_devices"])
+
+    print("\nPress any key to continue...")
+    a = input('').split(" ")[0]
+
 def main_menu():
     select = 0
     while True:
@@ -112,7 +132,7 @@ def main_menu():
             view_electronic_recommendation()
         elif select == 3:
             print("VIEW NAMED ENTITY RECOGNITION")
-            # view_named_entity_recognition()
+            view_named_entity_recognition()
         elif select == 4:
             break
         else:
