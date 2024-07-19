@@ -10,6 +10,9 @@ def write_file(review: str, review_category: str):
     file = open("reviews.txt", "a")
     file.write(review_category + "#" + " ".join(review) + "\n")
     file.close()
+    file = open("reviews_only.txt", "a")
+    file.write(" ".join(review) + "\n")
+    file.close()
 
 def get_recommendations(doc_index, cosine_sim, documents, top_n=3):
     similarity_scores = list(enumerate(cosine_sim[doc_index]))
@@ -72,13 +75,13 @@ def view_electronic_recommendation():
 
     # Get the recommendations for the first document
     os.system("cls")
-    file = open("positive.txt", "r").read()
+    file = open("reviews_only.txt", "r").read()
     documents = sent_tokenize(file)
     recommendations = get_recommendations(0, cosine_sim, documents)
-    print("\nTop 3 recommendations for most buyed product:")
+    print("Top 3 recommendations for most buyed product:\n")
     for doc, score in recommendations:
-        print(f"Document: {doc} (Score: {score})")
-    print("Press any key to continue...")
+        print(doc)
+    print("\nPress any key to continue...")
     a = input('').split(" ")[0]
 
 def main_menu():
