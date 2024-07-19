@@ -11,6 +11,12 @@ def write_file(review: str, review_category: str):
     file.write(review_category + "#" + " ".join(review) + "\n")
     file.close()
 
+def get_recommendations(doc_index, cosine_sim, documents, top_n=3):
+    similarity_scores = list(enumerate(cosine_sim[doc_index]))
+    similarity_scores = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
+    recommendations = similarity_scores[1:top_n+1]
+    return [(documents[i], score) for i, score in recommendations]
+
 def add_review():
     select = 0
     review = ""
@@ -49,6 +55,32 @@ def add_review():
             a = input('').split(" ")[0]
             continue
 
+def view_electronic_recommendation():
+    import pickle
+    # Load the recommendation data from the pickle file
+    try:
+        with open('recommendation_data.pickle', 'rb') as file:
+            tfidf_df, cosine_sim = pickle.load(file)
+        print("Data loaded successfully.")
+        print(tfidf_df.head())
+        print(cosine_sim)
+    except Exception as e:
+        print(f"Error loading pickle file: {e}")
+    
+    print("Press any key to continue...")
+    a = input('').split(" ")[0]
+
+    # Get the recommendations for the first document
+    os.system("cls")
+    file = open("positive.txt", "r").read()
+    documents = sent_tokenize(file)
+    recommendations = get_recommendations(0, cosine_sim, documents)
+    print("\nTop 3 recommendations for most buyed product:")
+    for doc, score in recommendations:
+        print(f"Document: {doc} (Score: {score})")
+    print("Press any key to continue...")
+    a = input('').split(" ")[0]
+
 def main_menu():
     select = 0
     while True:
@@ -66,7 +98,7 @@ def main_menu():
         print(f"YOUR REVIEW: {review_text}")
         print(f"YOUR REVIEW CATEGORY (POSITIVE/NEGATIVE): {review_category}")
         print("1. ADD REVIEW")
-        print("2. VIEW MOVIE RECOMMENDATION")
+        print("2. VIEW ELECTRONIC RECOMMENDATION")
         print("3. VIEW NAMED ENTITY RECOGNITION")
         print("4. EXIT")
         select = int(input(">> "))
@@ -74,7 +106,7 @@ def main_menu():
             add_review()
         elif select == 2:
             print("VIEW MOVIE RECOMMENDATION")
-            # view_movie_recommendation()
+            view_electronic_recommendation()
         elif select == 3:
             print("VIEW NAMED ENTITY RECOGNITION")
             # view_named_entity_recognition()
